@@ -75,6 +75,7 @@
   import { ElMessage } from 'element-plus'
   import mittBus from '@/utils/mittBus'
   import { useI18n } from 'vue-i18n'
+
   const { t } = useI18n()
 
   const ENCRYPT_KEY = import.meta.env.VITE_LOCK_ENCRYPT_KEY

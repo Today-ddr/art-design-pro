@@ -18,12 +18,14 @@ declare module 'qrcode.vue' {
   export type Level = 'L' | 'M' | 'Q' | 'H'
   export type RenderAs = 'canvas' | 'svg'
   export type GradientType = 'linear' | 'radial'
+
   export interface ImageSettings {
     src: string
     height: number
     width: number
     excavate: boolean
   }
+
   export interface QRCodeProps {
     value: string
     size?: number
@@ -32,6 +34,7 @@ declare module 'qrcode.vue' {
     foreground?: string
     renderAs?: RenderAs
   }
+
   const QrcodeVue: any
   export default QrcodeVue
 }

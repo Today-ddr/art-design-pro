@@ -76,14 +76,6 @@
                     <i class="menu-icon iconfont-sys">&#xe734;</i>
                     <span class="menu-txt">{{ $t('topBar.user[0]') }}</span>
                   </li>
-                  <li @click="toDocs()">
-                    <i class="menu-icon iconfont-sys" style="font-size: 15px">&#xe828;</i>
-                    <span class="menu-txt">{{ $t('topBar.user[1]') }}</span>
-                  </li>
-                  <li @click="toGithub()">
-                    <i class="menu-icon iconfont-sys">&#xe8d6;</i>
-                    <span class="menu-txt">{{ $t('topBar.user[2]') }}</span>
-                  </li>
                   <li @click="loginOut">
                     <i class="menu-icon iconfont-sys">&#xe780;</i>
                     <span class="menu-txt">{{ $t('topBar.user[3]') }}</span>
@@ -166,14 +158,6 @@
 
   const goPage = (path: string) => {
     router.push(path)
-  }
-
-  const toDocs = () => {
-    window.open('https://www.lingchen.kim/art-design-pro/docs')
-  }
-
-  const toGithub = () => {
-    window.open('https://github.com/Daymychen/art-design-pro')
   }
 
   const toHome = () => {
