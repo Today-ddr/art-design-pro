@@ -21,8 +21,8 @@
             >
               <div style="margin: 0; text-align: right">
                 <el-button size="small" type="primary" @click="showModel('button', item)"
-                  >编辑</el-button
-                >
+                  >编辑
+                </el-button>
                 <el-button size="small" type="danger" @click="deleteAuth()">删除</el-button>
               </div>
               <template #reference>
@@ -32,7 +32,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="编辑时间" prop="date"> 2022-3-12 12:00:00 </el-table-column>
+        <el-table-column label="编辑时间" prop="date"> 2022-3-12 12:00:00</el-table-column>
 
         <el-table-column fixed="right" label="操作" width="180">
           <template #default="scope">
