@@ -40,36 +40,6 @@
       </div>
 
       <div class="right">
-        <!-- 搜索 -->
-        <div class="search-wrap">
-          <div class="search-input" @click="openSearchDialog">
-            <div class="left">
-              <i class="iconfont-sys">&#xe710;</i>
-              <span>{{ $t('topBar.search.title') }}</span>
-            </div>
-            <div class="search-keydown">
-              <i class="iconfont-sys" v-if="isWindows">&#xeeac;</i>
-              <i class="iconfont-sys" v-else>&#xe9ab;</i>
-              <span>k</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 全屏按钮 -->
-        <div class="btn-box screen-box" @click="toggleFullScreen">
-          <div
-            class="btn"
-            :class="{ 'full-screen-btn': !isFullscreen, 'exit-full-screen-btn': isFullscreen }"
-          >
-            <i class="iconfont-sys">{{ isFullscreen ? '&#xe62d;' : '&#xe8ce;' }}</i>
-          </div>
-        </div>
-        <!-- 锁定屏幕 -->
-        <div class="btn-box lock-btn" @click="visibleLock">
-          <div class="btn lock-button">
-            <i class="iconfont-sys notice-btn">&#xe817;</i>
-          </div>
-        </div>
         <!-- 通知 -->
         <div class="btn-box notice-btn" @click="visibleNotice">
           <div class="btn notice-button">
@@ -77,53 +47,6 @@
             <span class="count notice-btn"></span>
           </div>
         </div>
-        <!-- 语言 -->
-        <div class="btn-box" v-if="showLanguage">
-          <el-dropdown @command="changeLanguage">
-            <div class="btn language-btn">
-              <i class="iconfont-sys">&#xe611;</i>
-            </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <div class="lang-btn-item">
-                  <el-dropdown-item command="zh">
-                    <span class="menu-txt">简体中文</span>
-                    <i v-if="locale === 'zh'" class="iconfont-sys">&#xe621;</i>
-                  </el-dropdown-item>
-                </div>
-                <div class="lang-btn-item">
-                  <el-dropdown-item command="en">
-                    <span class="menu-txt">English</span>
-                    <i v-if="locale === 'en'" class="iconfont-sys">&#xe621;</i>
-                  </el-dropdown-item>
-                </div>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-        <!-- 设置 -->
-        <div class="btn-box" @click="openSetting">
-          <el-popover :visible="showSettingGuide" placement="bottom-start" :width="190" :offset="0">
-            <template #reference>
-              <div class="btn setting-btn">
-                <i class="iconfont-sys">&#xe6d0;</i>
-              </div>
-            </template>
-            <template #default>
-              <p
-                >点击这里查看<span :style="{ color: systemThemeColor }"> 主题风格 </span>、
-                <span :style="{ color: systemThemeColor }"> 开启顶栏菜单 </span>等更多配置
-              </p>
-            </template>
-          </el-popover>
-        </div>
-        <!-- 切换主题 -->
-        <div class="btn-box" @click="toggleTheme">
-          <div class="btn">
-            <i class="iconfont-sys">{{ isDark ? '&#xe6b5;' : '&#xe725;' }}</i>
-          </div>
-        </div>
-
         <!-- 用户头像、菜单 -->
         <div class="user">
           <el-popover
@@ -182,19 +105,16 @@
   import Breadcrumb from '../Breadcrumb/index.vue'
   import Notice from '../Notice/index.vue'
   import MixedMenu from '../MixedMenu/index.vue'
-  import { LanguageEnum, MenuTypeEnum, MenuWidth, SystemThemeEnum } from '@/enums/appEnum'
+  import { MenuTypeEnum, MenuWidth } from '@/enums/appEnum'
   import { useSettingStore } from '@/store/modules/setting'
   import { useUserStore } from '@/store/modules/user'
-  import { useFullscreen } from '@vueuse/core'
   import { ElMessageBox } from 'element-plus'
   import { HOME_PAGE } from '@/router'
   import { useI18n } from 'vue-i18n'
   import mittBus from '@/utils/mittBus'
   import { useMenuStore } from '@/store/modules/menu'
   import { SystemInfo } from '@/config/setting'
-
-  const isWindows = navigator.userAgent.includes('Windows')
-  const { locale } = useI18n()
+  // 切换主题
 
   const settingStore = useSettingStore()
   const userStore = useUserStore()
@@ -202,14 +122,11 @@
 
   const showMenuButton = computed(() => settingStore.showMenuButton)
   const showRefreshButton = computed(() => settingStore.showRefreshButton)
-  const showLanguage = computed(() => settingStore.showLanguage)
   const menuOpen = computed(() => settingStore.menuOpen)
   const showCrumbs = computed(() => settingStore.showCrumbs)
   const userInfo = computed(() => userStore.getUserInfo)
-  const language = computed(() => userStore.language)
   const showNotice = ref(false)
   const notice = ref(null)
-  const systemThemeColor = computed(() => settingStore.systemThemeColor)
   const showSettingGuide = computed(() => settingStore.showSettingGuide)
   const userMenuPopover = ref()
   const menuList = computed(() => useMenuStore().getMenuList)
@@ -217,7 +134,6 @@
   const isLeftMenu = computed(() => menuType.value === MenuTypeEnum.LEFT)
   const isTopMenu = computed(() => menuType.value === MenuTypeEnum.TOP)
   const isTopLeftMenu = computed(() => menuType.value === MenuTypeEnum.TOP_LEFT)
-  const isDark = computed(() => settingStore.isDark)
   const { t } = useI18n()
 
   const { width } = useWindowSize()
@@ -227,19 +143,12 @@
   })
 
   onMounted(() => {
-    initLanguage()
     document.addEventListener('click', bodyCloseNotice)
   })
 
   onUnmounted(() => {
     document.removeEventListener('click', bodyCloseNotice)
   })
-
-  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen()
-
-  const toggleFullScreen = () => {
-    toggleFullscreen()
-  }
 
   const topBarWidth = (): string => {
     if (menuType.value === MenuTypeEnum.TOP) {
@@ -290,16 +199,7 @@
     }, time)
   }
 
-  const initLanguage = () => {
-    locale.value = language.value
-  }
-
-  const changeLanguage = (lang: LanguageEnum) => {
-    locale.value = lang
-    userStore.setLanguage(lang)
-    reload(50)
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const openSetting = () => {
     mittBus.emit('openSetting')
 
@@ -311,6 +211,7 @@
     // settingStore.openSettingGuide()
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const openSearchDialog = () => {
     mittBus.emit('openSearchDialog')
   }
@@ -323,9 +224,6 @@
         showNotice.value = false
         return
       }
-      if (className.indexOf('notice-btn') === -1) {
-        showNotice.value = false
-      }
     }
   }
 
@@ -333,22 +231,10 @@
     showNotice.value = !showNotice.value
   }
 
-  const visibleLock = () => {
-    mittBus.emit('openLockScreen')
-  }
-
   const closeUserMenu = () => {
     setTimeout(() => {
       userMenuPopover.value.hide()
     }, 100)
-  }
-
-  // 切换主题
-  import { useTheme } from '@/composables/useTheme'
-
-  const toggleTheme = () => {
-    let { LIGHT, DARK } = SystemThemeEnum
-    useTheme().switchTheme(useSettingStore().systemThemeType === LIGHT ? DARK : LIGHT)
   }
 </script>
 
