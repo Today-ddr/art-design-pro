@@ -15,7 +15,6 @@ import '@icons/system/iconfont.css'                 // 系统图标
 import 'element-plus/theme-chalk/dark/css-vars.css' // Element 暗黑主题
 import '@styles/element.scss'                       // Element 自定义主题
 import '@styles/dark.scss'                          // 系统主题
-import '@utils/console.ts'                          // 控制台输出内容
 import './mock/mock'                                // 数据 mock
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { setupGlobDirectives } from './directives'
