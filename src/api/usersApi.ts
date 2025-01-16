@@ -10,4 +10,11 @@ export class UserService {
       params
     })
   }
+
+  // 退出登录
+  static loginOut() {
+    return request.post<BaseResult>({
+      url: '/api/user/logout'
+    })
+  }
 }

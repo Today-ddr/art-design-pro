@@ -6,6 +6,7 @@ import { useSettingStore } from './setting'
 import { useWorktabStore } from './worktab'
 import { getSysStorage } from '@/utils/storage'
 import { MenuListType } from '@/types/menu'
+import { UserService } from '@/api/usersApi'
 
 interface UserState {
   language: LanguageEnum // 语言
@@ -96,6 +97,7 @@ export const useUserStore = defineStore({
         useWorktabStore().opened = []
         this.saveUserData()
         sessionStorage.removeItem('iframeRoutes')
+        UserService.loginOut()
         router.push('/login')
       }, 300)
     }

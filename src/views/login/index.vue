@@ -134,18 +134,6 @@
     }
 
     try {
-      // // 模拟登录
-      // const res = await axios.post('/api/login', params)
-      // let { code, data } = res.data
-      // if (code === ApiStatus.success) {
-      //   userStore.setUserInfo(data)
-      //   userStore.setLoginStatus(true)
-      //   showLoginSuccessNotice()
-      //   router.push(HOME_PAGE)
-      // } else {
-      //   ElMessage.error(res.data.message)
-      // }
-
       //封装 axios 登录，替换掉 .env 中的 VITE_API_URL 为你的 api 地址
       const res = await UserService.login(params)
       console.log(res)
@@ -157,7 +145,7 @@
           userStore.setUserInfo(user)
           userStore.setLoginStatus(true)
           showLoginSuccessNotice(res.data.username)
-          router.push(HOME_PAGE) // 登录成功后跳转到主页
+          await router.push(HOME_PAGE) // 登录成功后跳转到主页
         }
       } else {
         ElMessage.error('登录失败，' + res.description)

@@ -78,7 +78,7 @@
                   </li>
                   <li @click="loginOut">
                     <i class="menu-icon iconfont-sys">&#xe780;</i>
-                    <span class="menu-txt">{{ $t('topBar.user[3]') }}</span>
+                    <span class="menu-txt">{{ $t('topBar.user[1]') }}</span>
                   </li>
                 </ul>
               </div>
