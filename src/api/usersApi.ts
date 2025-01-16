@@ -1,6 +1,6 @@
 import request from '@/utils/http'
 import { BaseResult } from '@/types/axios'
-import { LoginParams } from './model/loginModel'
+import { LoginParams, RegisterParams } from './model/loginModel'
 
 export class UserService {
   // 登录
@@ -15,6 +15,14 @@ export class UserService {
   static loginOut() {
     return request.post<BaseResult>({
       url: '/api/user/logout'
+    })
+  }
+
+  // 注册用户
+  static userRegister(params: RegisterParams) {
+    return request.post<BaseResult>({
+      url: '/api/user/register',
+      params
     })
   }
 }

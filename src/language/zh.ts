@@ -94,8 +94,8 @@ export default {
     rule: [
       '请再次输入密码',
       '两次输入密码不一致!',
-      '长度在 3 到 20 个字符',
-      '密码长度不能小于6位',
+      '长度在 4 到 20 个字符',
+      '密码长度不能小于8位',
       '请同意隐私协议'
     ],
     sliderText: '按住滑块拖动',
@@ -116,7 +116,7 @@ export default {
   register: {
     title: '创建账号',
     subTitle: '欢迎加入我们，请填写以下信息完成注册',
-    placeholder: ['请输入账号', '请输入密码', '请再次输入密码'],
+    placeholder: ['请输入账号', '请输入密码', '请再次输入密码', '请输入用户名'],
     agreeText: '我同意',
     privacyPolicy: '《隐私政策》',
     submitBtnText: '注册',
