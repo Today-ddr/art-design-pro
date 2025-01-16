@@ -36,7 +36,9 @@
 </template>
 <script setup lang="ts">
   import { ref, reactive, toRefs, onMounted, computed } from 'vue'
+
   const emit = defineEmits(['handlerMove', 'update:value', 'passCallback'])
+
   interface PropsType {
     value: boolean
     width?: number
@@ -54,6 +56,7 @@
     textSize?: string
     textColor?: string
   }
+
   const props = withDefaults(defineProps<PropsType>(), {
     value: false,
     width: 260,
@@ -71,11 +74,13 @@
     textSize: '13px',
     textColor: '#333'
   })
+
   interface stateType {
     isMoving: boolean
     x: number
     isOk: boolean
   }
+
   const state = reactive(<stateType>{
     isMoving: false,
     x: 0,

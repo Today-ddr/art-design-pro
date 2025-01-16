@@ -12,8 +12,8 @@ export const SystemInfo = {
   name: 'Today 的工作台',
   // 登录默认帐号、密码
   login: {
-    username: 'admin',
-    password: '123456'
+    username: 'today',
+    password: '12345678'
   }
 }
 

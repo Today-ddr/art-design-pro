@@ -4,34 +4,6 @@
       <left-view></left-view>
     </div>
     <div class="right-wrap">
-      <div class="top-right-wrap">
-        <div class="btn theme-btn" @click="toggleTheme">
-          <i class="iconfont-sys">
-            {{ isDark ? '&#xe6b5;' : '&#xe725;' }}
-          </i>
-        </div>
-        <el-dropdown @command="changeLanguage">
-          <div class="btn language-btn">
-            <i class="iconfont-sys">&#xe611;</i>
-          </div>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <div class="lang-btn-item">
-                <el-dropdown-item command="zh">
-                  <span class="menu-txt">简体中文</span>
-                  <i v-if="locale === 'zh'" class="iconfont-sys">&#xe621;</i>
-                </el-dropdown-item>
-              </div>
-              <div class="lang-btn-item">
-                <el-dropdown-item command="en">
-                  <span class="menu-txt">English</span>
-                  <i v-if="locale === 'en'" class="iconfont-sys">&#xe621;</i>
-                </el-dropdown-item>
-              </div>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </div>
       <div class="header">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#iconsys-zhaopian-copy"></use>
@@ -83,9 +55,9 @@
 
           <div class="forget-password">
             <el-checkbox v-model="rememberPassword">{{ $t('login.rememberPwd') }}</el-checkbox>
-            <router-link class="custom-text" to="/forget-password">{{
-              $t('login.forgetPwd')
-            }}</router-link>
+            <router-link class="custom-text" to="/forget-password"
+              >{{ $t('login.forgetPwd') }}
+            </router-link>
           </div>
 
           <div style="margin-top: 30px">
@@ -103,9 +75,9 @@
           <div class="footer">
             <p>
               {{ $t('login.noAccount') }}
-              <router-link class="custom-text" to="/register">{{
-                $t('login.register')
-              }}</router-link>
+              <router-link class="custom-text" to="/register"
+                >{{ $t('login.register') }}
+              </router-link>
             </p>
           </div>
         </div>
@@ -121,11 +93,8 @@
   import { useUserStore } from '@/store/modules/user'
   import { HOME_PAGE } from '@/router'
   import { ApiStatus } from '@/utils/http/status'
-  import axios from 'axios'
   import { getCssVariable, getGreeting } from '@/utils/utils'
-  import { LanguageEnum, SystemThemeEnum } from '@/enums/appEnum'
-  import { useI18n } from 'vue-i18n'
-  import { useSettingStore } from '@/store/modules/setting'
+  import { UserService } from '@/api/usersApi'
 
   const userStore = useUserStore()
   const router = useRouter()
@@ -138,9 +107,6 @@
   const loading = ref(false)
   const rememberPassword = ref(true)
   const { width } = useWindowSize()
-
-  const store = useSettingStore()
-  const isDark = computed(() => store.isDark)
 
   const onPass = () => {}
 
@@ -163,43 +129,46 @@
     loading.value = true
 
     const params = {
-      username: username.value,
-      password: password.value
+      userAccount: username.value,
+      userPassword: password.value
     }
 
     try {
-      // 模拟登录
-      const res = await axios.post('/api/login', params)
-      let { code, data } = res.data
-      if (code === ApiStatus.success) {
-        userStore.setUserInfo(data)
-        userStore.setLoginStatus(true)
-        showLoginSuccessNotice()
-        router.push(HOME_PAGE)
-      } else {
-        ElMessage.error(res.data.message)
-      }
-
-      // 封装 axios 登录，替换掉 .env 中的 VITE_API_URL 为你的 api 地址
-      // const res = await UserService.login(params);
-
-      // if (res.code === ApiStatus.success) {
-      //   const { token, data } = res;
-
-      //   if (token) {
-      //     const user = { ...data, token };
-      //     userStore.setUserInfo(user);
-      //     userStore.setLoginStatus(true);
-      //     router.push(HOME_PAGE); // 登录成功后跳转到主页
-      //   }
+      // // 模拟登录
+      // const res = await axios.post('/api/login', params)
+      // let { code, data } = res.data
+      // if (code === ApiStatus.success) {
+      //   userStore.setUserInfo(data)
+      //   userStore.setLoginStatus(true)
+      //   showLoginSuccessNotice()
+      //   router.push(HOME_PAGE)
+      // } else {
+      //   ElMessage.error(res.data.message)
       // }
+
+      //封装 axios 登录，替换掉 .env 中的 VITE_API_URL 为你的 api 地址
+      const res = await UserService.login(params)
+      console.log(res)
+      //登录成功
+      if (res.code === ApiStatus.success) {
+        const { token, data } = res
+        if (res.data) {
+          const user = { ...data, token }
+          userStore.setUserInfo(user)
+          userStore.setLoginStatus(true)
+          showLoginSuccessNotice(res.data.username)
+          router.push(HOME_PAGE) // 登录成功后跳转到主页
+        }
+      } else {
+        ElMessage.error('登录失败，' + res.description)
+      }
     } finally {
       loading.value = false // 无论成功还是失败，都停止加载
     }
   }
 
   // 登录成功提示
-  const showLoginSuccessNotice = () => {
+  const showLoginSuccessNotice = (userName: any) => {
     setTimeout(() => {
       ElNotification({
         title: getGreeting(),
@@ -207,25 +176,9 @@
         showClose: false,
         duration: 2500,
         zIndex: 10000,
-        message: `欢迎登录 ${systemName}`
+        message: `欢迎登录 ${userName}`
       })
     }, 300)
-  }
-
-  // 切换语言
-  const { locale } = useI18n()
-
-  const changeLanguage = (lang: LanguageEnum) => {
-    locale.value = lang
-    userStore.setLanguage(lang)
-  }
-
-  // 切换主题
-  import { useTheme } from '@/composables/useTheme'
-
-  const toggleTheme = () => {
-    let { LIGHT, DARK } = SystemThemeEnum
-    useTheme().switchTheme(useSettingStore().systemThemeType === LIGHT ? DARK : LIGHT)
   }
 </script>
 

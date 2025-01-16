@@ -1,5 +1,6 @@
 import { SystemInfo } from '@/config/setting'
 import Mock from 'mockjs'
+
 const { mock, Random } = Mock
 
 // 模拟登录接口

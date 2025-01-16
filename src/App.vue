@@ -8,7 +8,6 @@
   import { useUserStore } from './store/modules/user'
   import zh from 'element-plus/es/locale/lang/zh-cn'
   import en from 'element-plus/es/locale/lang/en'
-  import { checkSystemUpgrade } from './utils/upgrade'
   import { initState, saveUserData } from './utils/storage'
 
   const userStore = useUserStore()
@@ -28,7 +27,6 @@
     initState()
     saveUserData()
     setBodyClass(false)
-    checkSystemUpgrade()
   })
 
   // 提升暗黑主题下页面刷新视觉体验
